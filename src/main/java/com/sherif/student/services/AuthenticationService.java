@@ -14,6 +14,7 @@ import java.util.List;
 
 @Service
 public class AuthenticationService {
+    public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -29,6 +30,10 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterUserDto input) {
+        if (userRepository.findByEmail(input.getEmail()).isPresent()) {
+            throw new RuntimeException(EMAIL_ALREADY_EXISTS);
+        }
+
         var user = new User()
             .setFullName(input.getFullName())
             .setEmail(input.getEmail())
