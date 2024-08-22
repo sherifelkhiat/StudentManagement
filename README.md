@@ -1,0 +1,6 @@
+- clone the master branch
+- add your database configuration and jwt key
+- mvn installclean
+- run the project
+- you can run unit tests
+- test all the endpoints
