@@ -22,6 +22,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/registrations")
 public class RegistrationController {
+    public static final String REGISTRATION_CANCELLED = "Registration cancelled";
+    public static final String REGISTERED_SUCCESSFULLY = "Registered successfully";
     private final RegistrationService registrationService;
 
     public RegistrationController(RegistrationService registrationService) {
@@ -33,7 +35,7 @@ public class RegistrationController {
         registrationService.registerToCourse(Long.valueOf(user.getId()), request);
         RegistrationResponse registrationResponse = RegistrationResponse.builder()
                 .status("Created")
-                .message("Registered successfully")
+                .message(REGISTERED_SUCCESSFULLY)
                 .build();
         return ResponseEntity.ok(registrationResponse);
     }
@@ -43,7 +45,7 @@ public class RegistrationController {
         registrationService.cancelRegistration(Long.valueOf(user.getId()), request);
         RegistrationResponse registrationResponse = RegistrationResponse.builder()
                 .status("Deleted")
-                .message("Registration cancelled")
+                .message(REGISTRATION_CANCELLED)
                 .build();
         return ResponseEntity.ok(registrationResponse);
     }
@@ -53,17 +55,6 @@ public class RegistrationController {
         List<Registration> registrations = registrationService.getRegistrationsForUser(Long.valueOf(user.getId()));
         return ResponseEntity.ok(registrations);
     }
-
-//    @PostMapping("/pdf")
-//    public ResponseEntity<byte[]> exportPdf(@AuthenticationPrincipal User user) throws IOException, DocumentException {
-//        List<Registration> registrations = registrationService.getRegistrationsForUser(Long.valueOf(user.getId()));
-//        ByteArrayOutputStream pdfStream = PdfUtils.generatePdfStream(registrations);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_PDF);
-//        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=query_results.pdf");
-//        headers.setContentLength(pdfStream.size());
-//        return new ResponseEntity<>(pdfStream.toByteArray(), headers, HttpStatus.OK);
-//    }
 
     @PostMapping("/pdf")
     public ResponseEntity<byte[]> exportPdf(@AuthenticationPrincipal User user) throws IOException, DocumentException {
